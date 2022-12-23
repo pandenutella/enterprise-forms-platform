@@ -73,7 +73,7 @@ export const AuthContextProvider: FC<ProviderProps> = ({ children }) => {
     setUser(null);
     setAuthenticated(false);
 
-    message.success("You have logged out successfully!");
+    message.success("You have signed out successfully!");
 
     router.push("/sign-in");
   };
