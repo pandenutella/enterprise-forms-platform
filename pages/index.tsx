@@ -1,10 +1,12 @@
 import { Button } from "antd";
 import Head from "next/head";
-import { FC, useContext } from "react";
+import { useContext } from "react";
+import AuthenticatedLayout from "../components/layout/AuthenticatedLayout";
 import useAuthGuard from "../hooks/useAuthGuard";
-import { AuthContext } from "../store/auth-context";
+import { AuthContext, AuthContextProvider } from "../store/auth-context";
+import { NextPageWithLayout } from "./_app";
 
-const Home: FC = () => {
+const Home: NextPageWithLayout = () => {
   useAuthGuard();
 
   const { signOut } = useContext(AuthContext);
@@ -22,5 +24,11 @@ const Home: FC = () => {
     </>
   );
 };
+
+Home.getLayout = (page) => (
+  <AuthContextProvider>
+    <AuthenticatedLayout>{page}</AuthenticatedLayout>
+  </AuthContextProvider>
+);
 
 export default Home;
