@@ -4,10 +4,11 @@ import { FC } from "react";
 import classes from "./SignInForm.module.css";
 
 type Props = {
+  authenticating: boolean;
   onSignIn: (email: string, password: string) => void;
 };
 
-const SignInForm: FC<Props> = ({ onSignIn }) => {
+const SignInForm: FC<Props> = ({ authenticating, onSignIn }) => {
   const handleSignIn = (values: any) => {
     const { email, password } = values;
 
@@ -28,7 +29,12 @@ const SignInForm: FC<Props> = ({ onSignIn }) => {
           <Input type="password" />
         </Form.Item>
         <Form.Item className={classes["action-button-group"]}>
-          <Button type="primary" htmlType="submit">
+          <Button
+            type="primary"
+            htmlType="submit"
+            loading={authenticating}
+            disabled={authenticating}
+          >
             Sign In
           </Button>
         </Form.Item>

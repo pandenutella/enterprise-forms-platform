@@ -12,6 +12,7 @@ type User = {
 type ContextType = {
   user: User | null;
   authenticated: boolean;
+  authenticating: boolean;
   signIn: (email: string, password: string) => void;
   signOut: () => void;
   changePassword: (password: string) => void;
@@ -24,6 +25,7 @@ type ProviderProps = {
 const initialValue: ContextType = {
   user: null,
   authenticated: false,
+  authenticating: false,
   signIn: (email, password) => {},
   signOut: () => {},
   changePassword: (password) => {},
@@ -36,8 +38,11 @@ export const AuthContextProvider: FC<ProviderProps> = ({ children }) => {
 
   const [user, setUser] = useState<User | null>(null);
   const [authenticated, setAuthenticated] = useState<boolean>(false);
+  const [authenticating, setAuthenticating] = useState<boolean>(false);
 
   const signIn = (email: string, password: string) => {
+    setAuthenticating(true);
+
     signInWithPassword(email, password)
       .then((response) => {
         const user = {
@@ -49,18 +54,28 @@ export const AuthContextProvider: FC<ProviderProps> = ({ children }) => {
 
         setUser({ idToken: user.idToken, email: user.email });
         setAuthenticated(true);
+
+        message.success(`Welcome, ${user.email}!`);
+        setAuthenticating(false);
+
+        router.push("/");
       })
       .catch((e) => {
         const { error } = e.response.data;
         if (error.code !== 400) return;
 
         message.error(getErrorMessage(error));
+        setAuthenticating(false);
       });
   };
 
   const signOut = () => {
     setUser(null);
     setAuthenticated(false);
+
+    message.success("You have logged out successfully!");
+
+    router.push("/sign-in");
   };
 
   const changePassword = (password: string) => {
@@ -76,6 +91,7 @@ export const AuthContextProvider: FC<ProviderProps> = ({ children }) => {
       setUser({ idToken: user.idToken, email: user.email });
 
       message.success("Your password has been changed successfully!");
+
       router.push("/");
     });
   };
@@ -85,6 +101,7 @@ export const AuthContextProvider: FC<ProviderProps> = ({ children }) => {
       value={{
         user,
         authenticated,
+        authenticating,
         signIn,
         signOut,
         changePassword,
