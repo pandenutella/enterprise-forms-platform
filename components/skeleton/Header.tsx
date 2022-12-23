@@ -1,9 +1,9 @@
 import { UserOutlined } from "@ant-design/icons";
 import { Layout, Menu, MenuProps } from "antd";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { FC, useContext } from "react";
 import { AuthContext } from "../../store/auth-context";
+import Brand from "./Brand";
 import classes from "./Header.module.css";
 
 const Header: FC = () => {
@@ -29,9 +29,7 @@ const Header: FC = () => {
 
   return (
     <Layout.Header className={classes.header}>
-      <Link className={classes.brand} href="/">
-        EFP
-      </Link>
+      <Brand text="Enterprise Forms Platform" href="/" />
       <Menu
         theme="dark"
         mode="horizontal"

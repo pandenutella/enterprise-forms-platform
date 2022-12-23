@@ -1,0 +1,8 @@
+.brand {
+  color: white;
+  font-size: 32px;
+}
+
+.brand * {
+  font-family: 'Dancing Script', cursive;
+}
