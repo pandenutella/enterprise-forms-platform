@@ -1,12 +1,12 @@
 import { Layout } from "antd";
-import React from "react";
+import { FC, ReactNode } from "react";
 import classes from "./Content.module.css";
 
 type Props = {
-  children: React.ReactNode;
+  children: ReactNode;
 };
 
-const Content: React.FC<Props> = (props) => {
+const Content: FC<Props> = (props) => {
   return (
     <Layout.Content className={classes.content}>
       {props.children}

@@ -55,8 +55,8 @@ export const AuthContextProvider: FC<ProviderProps> = ({ children }) => {
       value={{
         user,
         authenticated,
-        signIn: signIn,
-        signOut: signOut,
+        signIn,
+        signOut,
       }}
     >
       {children}
