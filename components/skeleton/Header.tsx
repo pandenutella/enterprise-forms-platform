@@ -31,6 +31,7 @@ const Header: FC = () => {
     <Layout.Header className={classes.header}>
       <Brand text="Enterprise Forms Platform" href="/" />
       <Menu
+        className={classes.menu}
         theme="dark"
         mode="horizontal"
         items={items}
