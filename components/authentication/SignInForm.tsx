@@ -15,7 +15,7 @@ const SignInForm: FC<Props> = ({ onSignIn }) => {
   };
 
   return (
-    <Card className={classes.form}>
+    <Card className={classes.form} title="Sign In">
       <Form layout="vertical" onFinish={handleSignIn}>
         <Form.Item label="Email" name="email" rules={[{ required: true }]}>
           <Input />
@@ -27,8 +27,8 @@ const SignInForm: FC<Props> = ({ onSignIn }) => {
         >
           <Input type="password" />
         </Form.Item>
-        <Form.Item>
-          <Button type="primary" htmlType="submit" block>
+        <Form.Item className={classes["action-button-group"]}>
+          <Button type="primary" htmlType="submit">
             Sign In
           </Button>
         </Form.Item>

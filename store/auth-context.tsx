@@ -1,10 +1,12 @@
 import { message } from "antd";
+import { useRouter } from "next/router";
 import { createContext, FC, ReactNode, useState } from "react";
-import { signInWithPassword } from "../services/accounts-service";
+import { signInWithPassword, update } from "../services/accounts-service";
 import { getErrorMessage } from "../utilities/service-utility";
 
 type User = {
-  email: string;
+  idToken: string | undefined;
+  email: string | undefined;
 };
 
 type ContextType = {
@@ -12,6 +14,7 @@ type ContextType = {
   authenticated: boolean;
   signIn: (email: string, password: string) => void;
   signOut: () => void;
+  changePassword: (password: string) => void;
 };
 
 type ProviderProps = {
@@ -21,20 +24,30 @@ type ProviderProps = {
 const initialValue: ContextType = {
   user: null,
   authenticated: false,
-  signIn: () => {},
+  signIn: (email, password) => {},
   signOut: () => {},
+  changePassword: (password) => {},
 };
 
 export const AuthContext = createContext<ContextType>(initialValue);
 
 export const AuthContextProvider: FC<ProviderProps> = ({ children }) => {
+  const router = useRouter();
+
   const [user, setUser] = useState<User | null>(null);
   const [authenticated, setAuthenticated] = useState<boolean>(false);
 
   const signIn = (email: string, password: string) => {
     signInWithPassword(email, password)
       .then((response) => {
-        setUser({ email: response.data.email });
+        const user = {
+          idToken: response.data.idToken,
+          email: response.data.email,
+        };
+
+        localStorage.setItem("idToken", user.idToken);
+
+        setUser({ idToken: user.idToken, email: user.email });
         setAuthenticated(true);
       })
       .catch((e) => {
@@ -50,6 +63,23 @@ export const AuthContextProvider: FC<ProviderProps> = ({ children }) => {
     setAuthenticated(false);
   };
 
+  const changePassword = (password: string) => {
+    if (!user?.idToken) return;
+
+    update(user.idToken, password).then((response) => {
+      const user = {
+        idToken: response.data.idToken,
+        email: response.data.email,
+      };
+
+      localStorage.setItem("idToken", user.idToken);
+      setUser({ idToken: user.idToken, email: user.email });
+
+      message.success("Your password has been changed successfully!");
+      router.push("/");
+    });
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -57,6 +87,7 @@ export const AuthContextProvider: FC<ProviderProps> = ({ children }) => {
         authenticated,
         signIn,
         signOut,
+        changePassword,
       }}
     >
       {children}

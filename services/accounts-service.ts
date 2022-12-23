@@ -11,3 +11,15 @@ export const signInWithPassword = (email: string, password: string) => {
     { params: { key: process.env.NEXT_PUBLIC_API_KEY } }
   );
 };
+
+export const update = (idToken: string, password: string) => {
+  return client.post(
+    "/accounts:update",
+    {
+      idToken,
+      password,
+      returnSecureToken: true,
+    },
+    { params: { key: process.env.NEXT_PUBLIC_API_KEY } }
+  );
+};

@@ -1,11 +1,13 @@
 import { UserOutlined } from "@ant-design/icons";
 import { Layout, Menu, MenuProps } from "antd";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { FC, useContext } from "react";
 import { AuthContext } from "../../store/auth-context";
 import classes from "./Header.module.css";
 
 const Header: FC = () => {
+  const router = useRouter();
   const { user, signOut } = useContext(AuthContext);
 
   const items: MenuProps["items"] = [
@@ -13,14 +15,16 @@ const Header: FC = () => {
       key: "USER",
       label: user?.email,
       icon: <UserOutlined />,
-      children: [{ key: "SIGN_OUT", label: "Sign Out" }],
+      children: [
+        { key: "CHANGE_PASSWORD", label: "Change Password" },
+        { key: "SIGN_OUT", label: "Sign Out" },
+      ],
     },
   ];
 
   const handleClick: MenuProps["onClick"] = ({ key }) => {
-    if (key !== "SIGN_OUT") return;
-
-    signOut();
+    if (key === "CHANGE_PASSWORD") router.push("/change-password");
+    if (key === "SIGN_OUT") signOut();
   };
 
   return (
