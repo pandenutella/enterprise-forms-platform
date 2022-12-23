@@ -1,7 +1,7 @@
 import { Layout } from "antd";
 import { FC, ReactNode } from "react";
-import Content from "./Content";
-import Footer from "./Footer";
+import Content from "../skeleton/Content";
+import Footer from "../skeleton/Footer";
 
 type Props = {
   children: ReactNode;
