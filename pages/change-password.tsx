@@ -8,9 +8,14 @@ import { NextPageWithLayout } from "./_app";
 const ChangePasswordPage: NextPageWithLayout = () => {
   useAuthGuard();
 
-  const { changePassword } = useContext(AuthContext);
+  const { processing, changePassword } = useContext(AuthContext);
 
-  return <ChangePasswordForm onChangePassword={changePassword} />;
+  return (
+    <ChangePasswordForm
+      processing={processing}
+      onChangePassword={changePassword}
+    />
+  );
 };
 
 ChangePasswordPage.getLayout = (page) => (

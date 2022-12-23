@@ -4,11 +4,11 @@ import { FC } from "react";
 import classes from "./SignInForm.module.css";
 
 type Props = {
-  authenticating: boolean;
+  processing: boolean;
   onSignIn: (email: string, password: string) => void;
 };
 
-const SignInForm: FC<Props> = ({ authenticating, onSignIn }) => {
+const SignInForm: FC<Props> = ({ processing, onSignIn }) => {
   const handleSignIn = (values: any) => {
     const { email, password } = values;
 
@@ -32,8 +32,8 @@ const SignInForm: FC<Props> = ({ authenticating, onSignIn }) => {
           <Button
             type="primary"
             htmlType="submit"
-            loading={authenticating}
-            disabled={authenticating}
+            loading={processing}
+            disabled={processing}
           >
             Sign In
           </Button>

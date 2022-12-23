@@ -5,10 +5,11 @@ import { FC } from "react";
 import classes from "./ChangePasswordForm.module.css";
 
 type Props = {
+  processing: boolean;
   onChangePassword: (password: string) => void;
 };
 
-const ChangePasswordForm: FC<Props> = ({ onChangePassword }) => {
+const ChangePasswordForm: FC<Props> = ({ processing, onChangePassword }) => {
   const router = useRouter();
 
   const handleChangePassword = (values: any) => {
@@ -52,7 +53,12 @@ const ChangePasswordForm: FC<Props> = ({ onChangePassword }) => {
         </Form.Item>
         <Form.Item className={classes["action-button-group"]}>
           <Space>
-            <Button type="primary" htmlType="submit">
+            <Button
+              type="primary"
+              htmlType="submit"
+              loading={processing}
+              disabled={processing}
+            >
               Confirm
             </Button>
             <Button htmlType="button" onClick={handleCancel}>

@@ -8,9 +8,9 @@ import { NextPageWithLayout } from "./_app";
 const SignInPage: NextPageWithLayout = () => {
   useUnauthGuard();
 
-  const { authenticating, signIn } = useContext(AuthContext);
+  const { processing, signIn } = useContext(AuthContext);
 
-  return <SignInForm authenticating={authenticating} onSignIn={signIn} />;
+  return <SignInForm processing={processing} onSignIn={signIn} />;
 };
 
 SignInPage.getLayout = (page) => (

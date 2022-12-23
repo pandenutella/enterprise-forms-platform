@@ -12,7 +12,7 @@ type User = {
 type ContextType = {
   user: User | null;
   authenticated: boolean;
-  authenticating: boolean;
+  processing: boolean;
   signIn: (email: string, password: string) => void;
   signOut: () => void;
   changePassword: (password: string) => void;
@@ -25,7 +25,7 @@ type ProviderProps = {
 const initialValue: ContextType = {
   user: null,
   authenticated: false,
-  authenticating: false,
+  processing: false,
   signIn: (email, password) => {},
   signOut: () => {},
   changePassword: (password) => {},
@@ -38,10 +38,10 @@ export const AuthContextProvider: FC<ProviderProps> = ({ children }) => {
 
   const [user, setUser] = useState<User | null>(null);
   const [authenticated, setAuthenticated] = useState<boolean>(false);
-  const [authenticating, setAuthenticating] = useState<boolean>(false);
+  const [processing, setProcessing] = useState<boolean>(false);
 
   const signIn = (email: string, password: string) => {
-    setAuthenticating(true);
+    setProcessing(true);
 
     signInWithPassword(email, password)
       .then((response) => {
@@ -56,7 +56,7 @@ export const AuthContextProvider: FC<ProviderProps> = ({ children }) => {
         setAuthenticated(true);
 
         message.success(`Welcome, ${user.email}!`);
-        setAuthenticating(false);
+        setProcessing(false);
 
         router.push("/");
       })
@@ -65,7 +65,7 @@ export const AuthContextProvider: FC<ProviderProps> = ({ children }) => {
         if (error.code !== 400) return;
 
         message.error(getErrorMessage(error));
-        setAuthenticating(false);
+        setProcessing(false);
       });
   };
 
@@ -81,19 +81,26 @@ export const AuthContextProvider: FC<ProviderProps> = ({ children }) => {
   const changePassword = (password: string) => {
     if (!user?.idToken) return;
 
-    update(user.idToken, password).then((response) => {
-      const user = {
-        idToken: response.data.idToken,
-        email: response.data.email,
-      };
+    setProcessing(true);
 
-      localStorage.setItem("idToken", user.idToken);
-      setUser({ idToken: user.idToken, email: user.email });
+    update(user.idToken, password)
+      .then((response) => {
+        const user = {
+          idToken: response.data.idToken,
+          email: response.data.email,
+        };
 
-      message.success("Your password has been changed successfully!");
+        localStorage.setItem("idToken", user.idToken);
+        setUser({ idToken: user.idToken, email: user.email });
 
-      router.push("/");
-    });
+        message.success("Your password has been changed successfully!");
+        setProcessing(false);
+
+        router.push("/");
+      })
+      .catch(() => {
+        setProcessing(false);
+      });
   };
 
   return (
@@ -101,7 +108,7 @@ export const AuthContextProvider: FC<ProviderProps> = ({ children }) => {
       value={{
         user,
         authenticated,
-        authenticating,
+        processing,
         signIn,
         signOut,
         changePassword,
