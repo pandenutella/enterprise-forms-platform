@@ -1,6 +1,6 @@
 import { Layout } from "antd";
 import React from "react";
-import classes from "./Footer.module.css";
+import classes from "./Content.module.css";
 
 type Props = {
   children: React.ReactNode;
