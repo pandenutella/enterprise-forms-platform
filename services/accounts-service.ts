@@ -1,7 +1,7 @@
-import client from "../client";
+import { authenticationClient } from "../client";
 
 export const signInWithPassword = (email: string, password: string) => {
-  return client.post(
+  return authenticationClient.post(
     "/accounts:signInWithPassword",
     {
       email,
@@ -13,7 +13,7 @@ export const signInWithPassword = (email: string, password: string) => {
 };
 
 export const update = (idToken: string, password: string) => {
-  return client.post(
+  return authenticationClient.post(
     "/accounts:update",
     {
       idToken,
