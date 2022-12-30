@@ -5,6 +5,12 @@ export const authenticationClient = axios.create({
   timeout: 1000,
 });
 
+authenticationClient.interceptors.request.use((config) => {
+  const key = process.env.NEXT_PUBLIC_API_KEY;
+
+  return { ...config, params: { ...config.params, key } };
+});
+
 export const databaseClient = axios.create({
   baseURL: "https://enterprise-forms-platform-default-rtdb.firebaseio.com",
   timeout: 1000,

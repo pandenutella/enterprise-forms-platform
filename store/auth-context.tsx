@@ -1,7 +1,11 @@
 import { message } from "antd";
 import { useRouter } from "next/router";
-import { createContext, FC, ReactNode, useState } from "react";
-import { signInWithPassword, update } from "../services/accounts-service";
+import { createContext, FC, ReactNode, useEffect, useState } from "react";
+import {
+  lookup,
+  signInWithPassword,
+  update,
+} from "../services/accounts-service";
 import { getErrorMessage } from "../utilities/service-utility";
 
 type User = {
@@ -39,6 +43,18 @@ export const AuthContextProvider: FC<ProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [authenticated, setAuthenticated] = useState<boolean>(false);
   const [processing, setProcessing] = useState<boolean>(false);
+
+  useEffect(() => {
+    const idToken = localStorage.getItem("idToken");
+    if (!idToken) return;
+
+    lookup(idToken).then((response) => {
+      const { email } = response.data.users[0];
+
+      setUser({ idToken, email });
+      setAuthenticated(true);
+    });
+  }, []);
 
   const signIn = (email: string, password: string) => {
     setProcessing(true);

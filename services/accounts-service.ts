@@ -8,8 +8,13 @@ export const signInWithPassword = (email: string, password: string) => {
       password,
       returnSecureToken: true,
     },
-    { params: { key: process.env.NEXT_PUBLIC_API_KEY } }
   );
+};
+
+export const lookup = (idToken: string) => {
+  return authenticationClient.post("/accounts:lookup", {
+    idToken,
+  });
 };
 
 export const update = (idToken: string, password: string) => {
@@ -20,6 +25,5 @@ export const update = (idToken: string, password: string) => {
       password,
       returnSecureToken: true,
     },
-    { params: { key: process.env.NEXT_PUBLIC_API_KEY } }
   );
 };
