@@ -1,6 +1,5 @@
 import { Layout } from "antd";
 import { FC, ReactNode } from "react";
-import Content from "../skeleton/Content";
 import Footer from "../skeleton/Footer";
 import classes from "./UnauthenticatedLayout.module.css";
 
@@ -11,7 +10,7 @@ type Props = {
 const UnauthenticatedLayout: FC<Props> = ({ children }) => {
   return (
     <Layout className={classes.layout}>
-      <Content>{children}</Content>
+      <Layout.Content className={classes.content}>{children}</Layout.Content>
       <Footer />
     </Layout>
   );
