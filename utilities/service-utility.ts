@@ -12,3 +12,10 @@ export const getErrorMessage = (error: FirebaseError) => {
       return error.message;
   }
 };
+
+export const mapFirebaseData = (data: any) => {
+  return Object.keys(data).map((id) => ({
+    id,
+    ...data[id],
+  }));
+};

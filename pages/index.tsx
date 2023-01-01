@@ -10,6 +10,7 @@ import * as formService from "../services/forms-service";
 import { AuthContextProvider } from "../store/auth-context";
 import FormGroupType from "../types/form-group-type";
 import FormType from "../types/form-type";
+import { mapFirebaseData } from "../utilities/service-utility";
 import { NextPageWithLayout } from "./_app";
 
 const Home: NextPageWithLayout = () => {
@@ -26,22 +27,8 @@ const Home: NextPageWithLayout = () => {
       .all([formGroupService.findAll(), formService.findAll()])
       .then(
         axios.spread((...responses) => {
-          const formGroupsData = responses[0].data;
-          setFormGroups(
-            Object.keys(formGroupsData).map((id) => ({
-              id,
-              name: formGroupsData[id].name,
-            }))
-          );
-
-          const formsData = responses[1].data;
-          setForms(
-            Object.keys(formsData).map((id) => ({
-              id,
-              groupId: formsData[id].groupId,
-              name: formsData[id].name,
-            }))
-          );
+          setFormGroups(mapFirebaseData(responses[0].data));
+          setForms(mapFirebaseData(responses[1].data));
         })
       )
       .finally(() => {
