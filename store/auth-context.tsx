@@ -9,8 +9,9 @@ import {
 import { getErrorMessage } from "../utilities/service-utility";
 
 type User = {
-  idToken: string | undefined;
-  email: string | undefined;
+  idToken: string;
+  email: string;
+  id: string;
 };
 
 type ContextType = {
@@ -49,9 +50,9 @@ export const AuthContextProvider: FC<ProviderProps> = ({ children }) => {
     if (!idToken) return;
 
     lookup(idToken).then((response) => {
-      const { email } = response.data.users[0];
+      const { email, localId: id } = response.data.users[0];
 
-      setUser({ idToken, email });
+      setUser({ idToken, email, id });
       setAuthenticated(true);
     });
   }, []);
@@ -64,6 +65,7 @@ export const AuthContextProvider: FC<ProviderProps> = ({ children }) => {
         const user = {
           idToken: response.data.idToken,
           email: response.data.email,
+          id: response.data.localId,
         };
 
         localStorage.setItem("idToken", user.idToken);
