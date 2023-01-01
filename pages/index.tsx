@@ -2,6 +2,7 @@ import { Space, Spin } from "antd";
 import axios from "axios";
 import Head from "next/head";
 import { useEffect, useState } from "react";
+import FormFilter from "../components/forms/FormFilter";
 import FormGroups from "../components/forms/FormGroups";
 import AuthenticatedLayout from "../components/layout/AuthenticatedLayout";
 import useAuthGuard from "../hooks/useAuthGuard";
@@ -13,12 +14,19 @@ import FormType from "../types/form-type";
 import { mapFirebaseData } from "../utilities/service-utility";
 import { NextPageWithLayout } from "./_app";
 
+const filterFormsByName = (filter: string) => (form: FormType) => {
+  if (!filter) return true;
+
+  return form.name.toLowerCase().includes(filter.toLowerCase());
+};
+
 const Home: NextPageWithLayout = () => {
   useAuthGuard();
 
   const [loading, setLoading] = useState<boolean>(false);
   const [formGroups, setFormGroups] = useState<FormGroupType[]>([]);
   const [forms, setForms] = useState<FormType[]>([]);
+  const [filter, setFilter] = useState<string>("");
 
   useEffect(() => {
     setLoading(true);
@@ -36,6 +44,10 @@ const Home: NextPageWithLayout = () => {
       });
   }, []);
 
+  const handleFilter = (filter: string) => {
+    setFilter(filter);
+  };
+
   return (
     <>
       <Head>
@@ -44,7 +56,11 @@ const Home: NextPageWithLayout = () => {
       <Spin spinning={loading} />
       {!loading && (
         <Space direction="vertical" style={{ width: "100%" }}>
-          <FormGroups formGroups={formGroups} forms={forms} />
+          <FormFilter filter={filter} onFilter={handleFilter} />
+          <FormGroups
+            formGroups={formGroups}
+            forms={forms.filter(filterFormsByName(filter))}
+          />
         </Space>
       )}
     </>
