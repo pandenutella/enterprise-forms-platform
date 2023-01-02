@@ -11,7 +11,6 @@ import * as formService from "../services/forms-service";
 import { AuthContextProvider } from "../store/auth-context";
 import FormGroupType from "../types/form-group-type";
 import FormType from "../types/form-type";
-import { mapFirebaseData } from "../utilities/service-utility";
 import { NextPageWithLayout } from "./_app";
 
 const filterFormsByName = (filter: string) => (form: FormType) => {
@@ -34,9 +33,9 @@ const Home: NextPageWithLayout = () => {
     axios
       .all([formGroupService.findAll(), formService.findAll()])
       .then(
-        axios.spread((...responses) => {
-          setFormGroups(mapFirebaseData(responses[0].data));
-          setForms(mapFirebaseData(responses[1].data));
+        axios.spread((...data) => {
+          setFormGroups(data[0]);
+          setForms(data[1]);
         })
       )
       .finally(() => {
