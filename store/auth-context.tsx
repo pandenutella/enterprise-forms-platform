@@ -10,7 +10,6 @@ import { auth } from "../firebase";
 import { getErrorMessage } from "../utilities/service-utility";
 
 type AuthUser = {
-  idToken: string;
   email: string;
   id: string;
 };
@@ -43,7 +42,6 @@ const mapFirebaseUserToUser = (user: User | null) => {
   return {
     id: user.uid,
     email: user.email,
-    idToken: user.accessToken,
   };
 };
 
@@ -72,7 +70,6 @@ export const AuthContextProvider: FC<ProviderProps> = ({ children }) => {
       .then((userCredential) => {
         const { user } = userCredential;
 
-        localStorage.setItem("idToken", user.accessToken);
         message.success(`Welcome, ${user.email}!`);
         router.push("/");
       })
@@ -86,7 +83,6 @@ export const AuthContextProvider: FC<ProviderProps> = ({ children }) => {
 
   const signOut = () => {
     auth.signOut().then(() => {
-      localStorage.removeItem("idToken");
       message.success("You have signed out successfully!");
       router.push("/sign-in");
     });
