@@ -1,4 +1,6 @@
 import { FirebaseError } from "firebase/app";
+import { database } from "../firebase";
+import { onValue, ref } from "firebase/database";
 
 export const getErrorMessage = (error: FirebaseError) => {
   switch (error.code) {
@@ -17,4 +19,14 @@ export const mapFirebaseData = (data: any) => {
     id,
     ...data[id],
   }));
+};
+
+export const findAllFirebaseData = (resource: string) => {
+  return new Promise((resolve) => {
+    onValue(ref(database, resource), (snapshot) => {
+      const value = snapshot.val();
+
+      resolve(value ? mapFirebaseData(value) : []);
+    });
+  });
 };
